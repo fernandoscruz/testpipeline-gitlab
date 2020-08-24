@@ -1,0 +1,1 @@
+Exemplo de Pipeline no Gilab para deploy em dois locias com ação manual e geração do artefato.

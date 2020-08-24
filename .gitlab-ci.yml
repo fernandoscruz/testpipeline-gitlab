@@ -1,0 +1,70 @@
+stages:
+  - package
+  - build
+  - deploy
+
+package war:
+    image: ubuntu
+    stage: package
+    variables:
+        GRAILS_VERSION: "2.5.5"
+        GRADLE_VERSION: "3.5"
+    artifacts:
+        paths:
+        - target/App1.war
+        - target/App2.war
+        - target/ROOT.war
+        name: "#CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+        expire_in: 2h
+        when: always
+    script:
+    #comandos para instalar grails
+    #e gerar war
+    #- apt-get update -qq && apt-get install -y zip && apt-get install -y -qq unzip && apt-get install -y curl && apt-get install -y openjdk-8-jdk
+    - mkdir target
+    - ls -la
+    - echo "build" > target/App1.war
+    - echo "build" > target/App2.war
+    - echo "build" > target/ROOT.war
+    - cat target/App1.war
+    - ls -la 
+    
+
+
+build app:
+  image: google/cloud-sdk:latest
+  stage: build
+  script:
+    - ls -la
+    - ls -la target
+    - cat target/App1.war
+    - echo 'Final Build'
+    #- docker image ls
+    #- gcloud config list
+
+
+deploy_prod:
+  stage: deploy
+  script:
+    - echo "Deploy to production server"
+  environment:
+    name: production
+    url: https://example.com
+  when: manual
+  only:
+  - master
+
+
+
+deploy gke:
+  stage: deploy
+  script:
+    - echo 'Final deploy'
+  environment:
+    name: production
+    url: https://example.com
+  when: manual
+  only:
+    - master
+
+
